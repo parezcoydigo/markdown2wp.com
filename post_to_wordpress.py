@@ -62,7 +62,8 @@ data['mt_keywords'] = getYAML['tags']
 # Make a list of images in the post, and upload them to the blog.
 # Uncomment the next two lines to enable image uploads from the
 # markdown file. The script imageList.py should be in the same
-# folder as this one. imageList.py requires PIL as a dependency.
+# folder as this one. Images need be stored in the same folder
+# in the size you want them to appear in the post.
 
 # imageList = imageUpload.imageName(newPost)
 # imageUpload.upload(server, blogid, username, password, imageList)
