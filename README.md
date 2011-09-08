@@ -9,7 +9,9 @@ Python 2.6.x or higher.
 There are a number of dependencies not in the standard library that are necessary:  
 ``
 keyring
+
 markdown
+
 yaml
 ``
 
