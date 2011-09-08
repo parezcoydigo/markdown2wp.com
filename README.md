@@ -16,4 +16,4 @@ Image uploading also requires `BeautifulSoup`.
 
 I'll leave it to you to install those with pip or easy_install.
 
-   
+For more information on using this script, see this [post](http://parezcoydigo.wordpress.com/2011/05/25/post-to-wordpress-com-with-markdown-6/) on my blog!   
