@@ -12,6 +12,7 @@ from BeautifulSoup import BeautifulSoup
 from os.path import basename
 from urlparse import urlsplit
 import xmlrpclib
+import base64
 
 
 def imageName(newPost):
@@ -29,13 +30,17 @@ def upload(server, blogid, username, password, imageList):
 		print 'No images to upload.'
 	else:	
 		for image in imageList:
-			toUpload = '/PATH/TO/IMAGE/FOLDER/'+image
+			toUpload = 'PATH/TO/YOUR/IMAGES/FOLDER'+image
 			print 'Uploading: '+image
 			imageData = {}
-			imageData['type'] = 'filetype/'+image[-3:]
+			if image[-3:] == 'jpg':
+				imageData['type'] = 'image/jpeg'
+			else: imageData['type'] = 'image/'+image[-3:]
 			imageData['name'] = image
-			imageData['bits'] = xmlrpclib.Binary(open(toUpload, 'rb').read())
-			server.metaWeblog.newMediaObject(blogid, username, password, imageData)
+#			imageData['bits'] = xmlrpclib.Binary(open(toUpload, 'rb').read())
+			imageData['bits'] = base64.encodestring(open(toUpload, "rb").read())
+			server.wp.uploadFile(blogid, username, password, imageData)
+#			server.metaWeblog.newMediaObject(blogid, username, password, imageData)
 			print image+' upload completed.' 
 
 
