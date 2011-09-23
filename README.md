@@ -7,9 +7,10 @@ markdown2wp.com is comprised of two python scripts for posting entries written i
 Python 2.6.x or higher.
 
 There are a number of dependencies not in the standard library that are necessary:  
-`keyring  
-markdown  
-yaml`  
+`keyring`    
+`markdown`    
+`yaml`  
+`kitchen`
 
 
 Image uploading also requires `BeautifulSoup`.
