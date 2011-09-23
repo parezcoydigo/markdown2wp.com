@@ -20,6 +20,7 @@ import markdown
 import keyring
 import cPickle as pickle
 import imageUpload
+from kitchen.text.converters import to_unicode
 
 
 # this regex is borrowed from Jonathan Chu's growl site generator
@@ -33,10 +34,11 @@ postFile = open(sys.argv[1], 'r').read()
 fileInfo = RE_YAML.match(postFile)
 getYAML = yaml.load(fileInfo.groupdict().get('yaml'))
 postMD = fileInfo.groupdict().get('content')
+postMD = to_unicode(postMD, encoding='utf-8', errors='ignore')
 
 # transform the markdown into an html snippet
 
-newPost = markdown.markdown(postMD, extensions=['footnotes', 'codehilite'])
+newPost = markdown.markdown(postMD, extensions=['footnotes', 'codehilite', 'toc'])
 
 blogurl = 'https://YOURBLOG.wordpress.com/xmlrpc.php'
 username = 'YOURUSERNAME'
