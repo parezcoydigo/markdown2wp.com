@@ -5,7 +5,7 @@ post_to_wordpress.py
 
 Created by Chad Black, 05-24-2011
 
-This script takes a markdown file with a YAML header and posts
+This script takes a markdown file with multimarkdown-style metadata and posts
 either a draft or a published article to a wordpress.com blog. It 
 also first retrieves and uploads images stored in an image folder to the
 blog on deployment.
