@@ -13,8 +13,6 @@ blog on deployment.
 """
 
 import xmlrpclib
-import yaml
-import re
 import sys
 import markdown
 import keyring
@@ -22,23 +20,15 @@ import cPickle as pickle
 import imageUpload
 from kitchen.text.converters import to_unicode
 
-
-# this regex is borrowed from Jonathan Chu's growl site generator
-# https://github.com/jonathanchu/growl/blob/master/growl.py
-
-RE_YAML = re.compile(r'(^---\s*$(?P<yaml>.*?)^---\s*$)?(?P<content>.*)',
-                         re.M | re.S)
-# open file, extract yaml, extract markdown post text
-
+# open file, extract markdown post text, convert to unicode.
 postFile = open(sys.argv[1], 'r').read()
-fileInfo = RE_YAML.match(postFile)
-getYAML = yaml.load(fileInfo.groupdict().get('yaml'))
-postMD = fileInfo.groupdict().get('content')
-postMD = to_unicode(postMD, encoding='utf-8', errors='ignore')
+postFile = to_unicode(postFile)
 
-# transform the markdown into an html snippet
 
-newPost = markdown.markdown(postMD, extensions=['footnotes', 'codehilite', 'toc'])
+# transform the markdown into an html snippet and extract the post metadata
+md = markdown.Markdown(extensions=['meta', 'footnotes', 'codehilite', 'toc'])
+newPost = md.convert(postFile)
+data = md.Meta
 
 blogurl = 'https://YOURBLOG.wordpress.com/xmlrpc.php'
 username = 'YOURUSERNAME'
@@ -51,15 +41,22 @@ username = 'YOURUSERNAME'
 blogid = ''
 server = xmlrpclib.ServerProxy(blogurl, allow_none=True)
 
-if getYAML['status'] == 'publish':
+if data['status'] == 'publish':
 	status = '1'
 else: status = '0'
 
-data = {}
-data['title'] = getYAML['title']
+# The metadata plugin for python markdown returns a dictionary with each
+# value as a list. We have to coerce that to a string for the title. Also,
+# the xmlrpc uses 'mt_keywords' instead of 'tags' in its struct, so we need
+# to substitute those keys too. Finally, we import the converted html as the 
+# post description.
+data['mt_keywords'] = data['tags']
 data['description'] = newPost
-data['categories'] = [getYAML['categories']]
-data['mt_keywords'] = getYAML['tags']
+data['title'] = data['title'][0]
+
+# We need to drop status and tags from the dictionary for transport.
+data.pop('status')
+data.pop('tags')
 
 # Make a list of images in the post, and upload them to the blog.
 # Uncomment the next two lines to enable image uploads from the
@@ -80,9 +77,9 @@ print "Created new post. ID = %s" %post_id
 # from the server, editing, and reposting. Haven't written that code yet.
 
 postList = pickle.load(open('/PATH/TO/post_list.txt'))
-
 postList[post_id] = data['title']
-pickle.dump(postList, open('/PATH/TO/post_list.txt', 'w'))
+pickle.dump(postList, open('/PATH/TO/post_list.txt', 'w')):
+
 
 
 
