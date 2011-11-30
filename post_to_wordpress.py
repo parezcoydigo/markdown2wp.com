@@ -41,7 +41,7 @@ username = 'YOURUSERNAME'
 blogid = ''
 server = xmlrpclib.ServerProxy(blogurl, allow_none=True)
 
-if data['status'] == 'publish':
+if data['status'] == [u'publish']:
 	status = '1'
 else: status = '0'
 
