@@ -12,7 +12,7 @@ from BeautifulSoup import BeautifulSoup
 from os.path import basename
 from urlparse import urlsplit
 import xmlrpclib
-import base64
+
 
 
 def imageName(newPost):
@@ -37,10 +37,8 @@ def upload(server, blogid, username, password, imageList):
 				imageData['type'] = 'image/jpeg'
 			else: imageData['type'] = 'image/'+image[-3:]
 			imageData['name'] = image
-#			imageData['bits'] = xmlrpclib.Binary(open(toUpload, 'rb').read())
-			imageData['bits'] = base64.encodestring(open(toUpload, "rb").read())
+			imageData['bits'] = xmlrpclib.Binary(open(toUpload, 'rb').read())
 			server.wp.uploadFile(blogid, username, password, imageData)
-#			server.metaWeblog.newMediaObject(blogid, username, password, imageData)
 			print image+' upload completed.' 
 
 
